@@ -80,6 +80,22 @@ data "aws_iam_policy_document" "github_actions" {
     resources = ["*"]
   }
 
+  # ACM — certificates in us-east-1 for CloudFront
+  statement {
+    sid       = "ACM"
+    effect    = "Allow"
+    actions   = ["acm:*"]
+    resources = ["*"]
+  }
+
+  # Route 53 — DNS validation records and site alias
+  statement {
+    sid       = "Route53"
+    effect    = "Allow"
+    actions   = ["route53:*"]
+    resources = ["*"]
+  }
+
   # IAM — manage the OIDC provider and this role itself
   statement {
     sid    = "IAMOidc"
