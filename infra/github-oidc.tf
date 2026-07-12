@@ -63,17 +63,9 @@ data "aws_iam_policy_document" "github_actions" {
 
   # Site S3 buckets (all workspaces match krapao-reviews-*)
   statement {
-    sid    = "SiteBuckets"
-    effect = "Allow"
-    actions = [
-      "s3:CreateBucket", "s3:DeleteBucket",
-      "s3:GetBucketPolicy", "s3:PutBucketPolicy", "s3:DeleteBucketPolicy",
-      "s3:GetBucketPublicAccessBlock", "s3:PutBucketPublicAccessBlock",
-      "s3:GetBucketVersioning", "s3:PutBucketVersioning",
-      "s3:GetBucketTagging", "s3:PutBucketTagging",
-      "s3:GetObject", "s3:PutObject", "s3:DeleteObject",
-      "s3:ListBucket",
-    ]
+    sid       = "SiteBuckets"
+    effect    = "Allow"
+    actions   = ["s3:*"]
     resources = [
       "arn:aws:s3:::${var.project_name}-*",
       "arn:aws:s3:::${var.project_name}-*/*",
