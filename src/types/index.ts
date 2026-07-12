@@ -20,6 +20,7 @@ export interface Restaurant {
   districtTh: string
   lat: number
   lng: number
+  placeId?: string
   krapaoScore: KrapaoScore
   reviewCount: number
 }
@@ -63,11 +64,7 @@ export interface CreateRestaurantPayload {
   districtTh: string
   lat: number
   lng: number
-}
-
-export interface PlaceSuggestion {
-  placeId: string
-  description: string
+  placeId?: string
 }
 
 export interface PlaceDetails {

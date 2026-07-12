@@ -17,6 +17,16 @@ provider "aws" {
   }
 }
 
+# CloudFront requires ACM certificates to be in us-east-1
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+
+  default_tags {
+    tags = local.tags
+  }
+}
+
 # ── S3 bucket ──────────────────────────────────────────────────────────────────
 
 resource "aws_s3_bucket" "site" {
@@ -57,6 +67,64 @@ data "aws_iam_policy_document" "s3_cloudfront" {
       variable = "AWS:SourceArn"
       values   = [aws_cloudfront_distribution.site.arn]
     }
+  }
+}
+
+# ── ACM certificate + DNS validation ──────────────────────────────────────────
+
+data "aws_route53_zone" "site" {
+  count        = local.use_custom_domain ? 1 : 0
+  name         = var.hosted_zone_names[local.env]
+  private_zone = false
+}
+
+resource "aws_acm_certificate" "site" {
+  count             = local.use_custom_domain ? 1 : 0
+  provider          = aws.us_east_1
+  domain_name       = local.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  for_each = local.use_custom_domain ? {
+    for dvo in aws_acm_certificate.site[0].domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  } : {}
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.site[0].zone_id
+}
+
+resource "aws_acm_certificate_validation" "site" {
+  count                   = local.use_custom_domain ? 1 : 0
+  provider                = aws.us_east_1
+  certificate_arn         = aws_acm_certificate.site[0].arn
+  validation_record_fqdns = [for r in aws_route53_record.cert_validation : r.fqdn]
+}
+
+# ── Route 53 alias → CloudFront ───────────────────────────────────────────────
+
+resource "aws_route53_record" "site" {
+  count   = local.use_custom_domain ? 1 : 0
+  zone_id = data.aws_route53_zone.site[0].zone_id
+  name    = local.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.site.domain_name
+    zone_id                = aws_cloudfront_distribution.site.hosted_zone_id
+    evaluate_target_health = false
   }
 }
 
@@ -110,6 +178,7 @@ resource "aws_cloudfront_distribution" "site" {
   is_ipv6_enabled     = true
   default_root_object = "index.html"
   price_class         = local.price_class
+  aliases             = local.use_custom_domain ? [local.domain_name] : []
 
   origin {
     domain_name              = aws_s3_bucket.site.bucket_regional_domain_name
@@ -166,8 +235,20 @@ resource "aws_cloudfront_distribution" "site" {
     error_caching_min_ttl = 0
   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = true
+  dynamic "viewer_certificate" {
+    for_each = local.use_custom_domain ? [1] : []
+    content {
+      acm_certificate_arn      = aws_acm_certificate_validation.site[0].certificate_arn
+      ssl_support_method       = "sni-only"
+      minimum_protocol_version = "TLSv1.2_2021"
+    }
+  }
+
+  dynamic "viewer_certificate" {
+    for_each = local.use_custom_domain ? [] : [1]
+    content {
+      cloudfront_default_certificate = true
+    }
   }
 
   restrictions {
@@ -175,4 +256,6 @@ resource "aws_cloudfront_distribution" "site" {
       restriction_type = "none"
     }
   }
+
+  depends_on = [aws_acm_certificate_validation.site]
 }

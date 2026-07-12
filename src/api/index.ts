@@ -3,7 +3,6 @@ import type {
   Review,
   CreateReviewPayload,
   CreateRestaurantPayload,
-  PlaceSuggestion,
   PlaceDetails,
   KrapaoScore,
 } from '@/types'
@@ -51,6 +50,7 @@ export async function createRestaurant(data: CreateRestaurantPayload): Promise<R
   const restaurant: Restaurant = {
     id: String(Date.now()),
     ...data,
+    placeId: data.placeId || undefined,
     krapaoScore: { overall: 0, aromatic: 0, wok: 0, heat: 0, purity: 0, protein: 0, egg: 0 },
     reviewCount: 0,
   }
@@ -112,43 +112,8 @@ function _recomputeScore(restaurantId: string) {
 
 // ── Google Places ─────────────────────────────────────────────────────────────
 
-export async function autocompletePlaces(input: string): Promise<PlaceSuggestion[]> {
-  const key = import.meta.env.VITE_GOOGLE_PLACES_API_KEY as string | undefined
-  if (!key || !input.trim()) return []
-
-  const res = await fetch(
-    'https://places.googleapis.com/v1/places:autocomplete',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Goog-Api-Key': key,
-      },
-      body: JSON.stringify({
-        input,
-        locationBias: {
-          circle: {
-            center: { latitude: 13.7563, longitude: 100.5018 },
-            radius: 50000,
-          },
-        },
-        includedPrimaryTypes: ['restaurant', 'food'],
-      }),
-    },
-  )
-
-  if (!res.ok) return []
-  const data = await res.json() as { suggestions?: Array<{ placePrediction?: { placeId?: string; text?: { text?: string } } }> }
-  return (data.suggestions ?? [])
-    .map(s => ({
-      placeId: s.placePrediction?.placeId ?? '',
-      description: s.placePrediction?.text?.text ?? '',
-    }))
-    .filter(s => s.placeId)
-}
-
 export async function getPlaceDetails(placeId: string): Promise<PlaceDetails> {
-  const key = import.meta.env.VITE_GOOGLE_PLACES_API_KEY as string
+  const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string
 
   const fetchLang = async (lang: string) => {
     const res = await fetch(

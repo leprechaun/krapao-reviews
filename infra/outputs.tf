@@ -20,7 +20,7 @@ output "s3_bucket_arn" {
 
 output "site_url" {
   description = "Primary URL for this environment"
-  value       = "https://${aws_cloudfront_distribution.site.domain_name}"
+  value       = local.use_custom_domain ? "https://${local.domain_name}" : "https://${aws_cloudfront_distribution.site.domain_name}"
 }
 
 output "github_actions_role_arn" {
