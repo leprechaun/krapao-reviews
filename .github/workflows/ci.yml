@@ -91,27 +91,10 @@ jobs:
         working-directory: infra
         run: |
           BUCKET=$(terraform output -raw s3_bucket_name)
-          CF_ID=$(terraform output -raw cloudfront_distribution_id)
-
-          aws s3 sync ../dist/assets/ "s3://$BUCKET/assets/" \
-            --cache-control "public,max-age=31536000,immutable" \
-            --delete
-
-          aws s3 sync ../dist/locales/ "s3://$BUCKET/locales/" \
-            --cache-control "public,max-age=3600" \
-            --delete
 
           aws s3 sync ../dist/ "s3://$BUCKET/" \
             --cache-control "no-cache,no-store,must-revalidate" \
-            --exclude "assets/*" \
-            --exclude "locales/*" \
             --delete
-
-          aws cloudfront create-invalidation \
-            --distribution-id "$CF_ID" \
-            --paths "/*" \
-            --query 'Invalidation.Id' \
-            --output text
 
           echo "✓ Deployed to $(terraform output -raw site_url)"
 
@@ -154,7 +137,6 @@ jobs:
         working-directory: infra
         run: |
           BUCKET=$(terraform output -raw s3_bucket_name)
-          CF_ID=$(terraform output -raw cloudfront_distribution_id)
 
           aws s3 sync ../dist/assets/ "s3://$BUCKET/assets/" \
             --cache-control "public,max-age=31536000,immutable" \
@@ -169,11 +151,5 @@ jobs:
             --exclude "assets/*" \
             --exclude "locales/*" \
             --delete
-
-          aws cloudfront create-invalidation \
-            --distribution-id "$CF_ID" \
-            --paths "/*" \
-            --query 'Invalidation.Id' \
-            --output text
 
           echo "✓ Deployed to $(terraform output -raw site_url)"
