@@ -1,0 +1,183 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  # ── Test ────────────────────────────────────────────────────────────────────
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type check
+        run: npx tsc -b
+
+  # ── Build ───────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_GOOGLE_PLACES_API_KEY: ${{ secrets.VITE_GOOGLE_PLACES_API_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  # ── Deploy: dev ─────────────────────────────────────────────────────────────
+  deploy-dev:
+    name: Deploy (dev)
+    needs: build
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      TF_VAR_acm_certificate_arns: ${{ secrets.TF_VAR_ACM_CERTIFICATE_ARNS }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.5"
+
+      - name: Terraform init
+        working-directory: infra
+        run: terraform init -backend-config=backend.hcl
+
+      - name: Select workspace
+        working-directory: infra
+        run: terraform workspace select dev || terraform workspace new dev
+
+      - name: Terraform apply
+        working-directory: infra
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"
+
+      - name: Sync to S3
+        working-directory: infra
+        run: |
+          BUCKET=$(terraform output -raw s3_bucket_name)
+          CF_ID=$(terraform output -raw cloudfront_distribution_id)
+
+          aws s3 sync ../dist/assets/ "s3://$BUCKET/assets/" \
+            --cache-control "public,max-age=31536000,immutable" \
+            --delete
+
+          aws s3 sync ../dist/locales/ "s3://$BUCKET/locales/" \
+            --cache-control "public,max-age=3600" \
+            --delete
+
+          aws s3 sync ../dist/ "s3://$BUCKET/" \
+            --cache-control "no-cache,no-store,must-revalidate" \
+            --exclude "assets/*" \
+            --exclude "locales/*" \
+            --delete
+
+          aws cloudfront create-invalidation \
+            --distribution-id "$CF_ID" \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text
+
+          echo "✓ Deployed to $(terraform output -raw site_url)"
+
+  # ── Deploy: prod ────────────────────────────────────────────────────────────
+  deploy-prod:
+    name: Deploy (prod)
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      TF_VAR_acm_certificate_arns: ${{ secrets.TF_VAR_ACM_CERTIFICATE_ARNS }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.5"
+
+      - name: Terraform init
+        working-directory: infra
+        run: terraform init -backend-config=backend.hcl
+
+      - name: Select workspace
+        working-directory: infra
+        run: terraform workspace select prod || terraform workspace new prod
+
+      - name: Terraform apply
+        working-directory: infra
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"
+
+      - name: Sync to S3
+        working-directory: infra
+        run: |
+          BUCKET=$(terraform output -raw s3_bucket_name)
+          CF_ID=$(terraform output -raw cloudfront_distribution_id)
+
+          aws s3 sync ../dist/assets/ "s3://$BUCKET/assets/" \
+            --cache-control "public,max-age=31536000,immutable" \
+            --delete
+
+          aws s3 sync ../dist/locales/ "s3://$BUCKET/locales/" \
+            --cache-control "public,max-age=3600" \
+            --delete
+
+          aws s3 sync ../dist/ "s3://$BUCKET/" \
+            --cache-control "no-cache,no-store,must-revalidate" \
+            --exclude "assets/*" \
+            --exclude "locales/*" \
+            --delete
+
+          aws cloudfront create-invalidation \
+            --distribution-id "$CF_ID" \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text
+
+          echo "✓ Deployed to $(terraform output -raw site_url)"

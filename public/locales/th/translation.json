@@ -1,0 +1,113 @@
+{
+  "nav": {
+    "home": "หน้าแรก",
+    "restaurants": "ร้านอาหาร",
+    "addRestaurant": "เพิ่มร้าน"
+  },
+  "home": {
+    "hero": {
+      "title": "ผัดกะเพราที่ดีที่สุดในกรุงเทพ",
+      "subtitle": "คะแนนจากหกมิติด้านการทำอาหาร ไม่มีการประนีประนอม",
+      "cta": "ดูร้านอาหาร"
+    },
+    "featured": "ร้านแนะนำ",
+    "map": {
+      "addBtn": "เพิ่มร้านอาหาร"
+    }
+  },
+  "restaurants": {
+    "title": "ร้านอาหารทั้งหมด",
+    "search": "ค้นหาชื่อร้านหรือเขต…",
+    "minScore": "คะแนนขั้นต่ำ",
+    "noResults": "ไม่พบร้านอาหาร",
+    "reviewCount_one": "{{count}} รีวิว",
+    "reviewCount_other": "{{count}} รีวิว"
+  },
+  "restaurant": {
+    "overallScore": "คะแนนรวม",
+    "dimensions": "รายละเอียดคะแนน",
+    "reviews": "รีวิว",
+    "writeReview": "เขียนรีวิว",
+    "noReviews": "ยังไม่มีรีวิว เป็นคนแรกสิ!",
+    "wokHei": "ผัดมีกลิ่นกระทะดีมาก",
+    "wokHeiEn": "Fantastic aroma of the pan"
+  },
+  "dimensions": {
+    "aromatic": {
+      "label": "ความถูกต้องและกลิ่นหอมของใบกะเพรา",
+      "casual": "กลิ่นกะเพราถึงใจไหม",
+      "casualEn": "Does the holy basil hit the soul?"
+    },
+    "wok": {
+      "label": "เทคนิคการผัดและความแห้งของเนื้อสัตว์",
+      "casual": "ผัดแห้ง คั่วหอมไหม",
+      "casualEn": "Stir-fried dry, fragrant enough?"
+    },
+    "heat": {
+      "label": "ความสมดุลของพริกและกระเทียม",
+      "casual": "พริกกระเทียมถึงเครื่องไหม",
+      "casualEn": "Do the chilli-garlic hit the mark?"
+    },
+    "purity": {
+      "label": "ความบริสุทธิ์ของวัตถุดิบ",
+      "casual": "กะเพราแท้ ไม่ใส่ถั่วฝักยาว",
+      "casualEn": "Holy basil only — no long beans"
+    },
+    "protein": {
+      "label": "เนื้อสัมผัสจากการสับด้วยมือ",
+      "casual": "เนื้อสับมือ ไม่ใช่หมูบดเครื่อง",
+      "casualEn": "Hand-chopped, not machine-ground"
+    },
+    "egg": {
+      "label": "การทอดไข่ดาวให้ขอบกรอบไข่แดงเยิ้ม",
+      "casual": "ไข่ดาวกรอบนอกไข่แดงเป็นลาวา",
+      "casualEn": "Crispy whites, lava yolk"
+    }
+  },
+  "review": {
+    "title": "เขียนรีวิว",
+    "authorName": "ชื่อของคุณ",
+    "comment": "ความคิดเห็นของคุณ",
+    "visitedAt": "วันที่ไปกิน",
+    "submit": "ส่งรีวิว",
+    "submitting": "กำลังส่ง…",
+    "success": "ส่งรีวิวแล้ว!",
+    "overall": "คะแนนรวม",
+    "notRated": "—",
+    "heat": {
+      "specifiedQuestion": "คุณบอกระดับความเผ็ดไหม?",
+      "yes": "บอก",
+      "no": "ไม่บอก",
+      "howDidItLand": "ได้ผลอย่างไร?",
+      "1": "เบากว่าที่คาดมาก",
+      "2": "เบากว่านิดหน่อย",
+      "3": "ตรงเลย",
+      "4": "เผ็ดกว่านิดหน่อย",
+      "5": "เผ็ดกว่ามาก"
+    },
+    "purity": {
+      "question": "ความบริสุทธิ์ของสูตร?",
+      "pure": "บริสุทธิ์",
+      "hasFillers": "มีผักแปลกปลอม",
+      "offenders": "มีผักอะไรบ้าง?",
+      "longBeans": "ถั่วฝักยาว",
+      "onions": "หัวหอม",
+      "carrots": "แครอท",
+      "bellPeppers": "พริกหวาน",
+      "bambooShoots": "หน่อไม้"
+    }
+  },
+  "addRestaurant": {
+    "title": "เพิ่มร้านอาหาร",
+    "searchPlaceholder": "ค้นหาร้านอาหาร…",
+    "preview": "ตัวอย่างร้านอาหาร",
+    "confirm": "เพิ่มในแผนที่",
+    "cancel": "ยกเลิก",
+    "noApiKey": "ยังไม่ได้ตั้งค่า Google Places API key",
+    "coordinates": "พิกัด"
+  },
+  "lang": {
+    "en": "EN",
+    "th": "TH"
+  }
+}

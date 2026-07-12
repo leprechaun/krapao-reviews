@@ -1,0 +1,113 @@
+{
+  "nav": {
+    "home": "Home",
+    "restaurants": "Restaurants",
+    "addRestaurant": "Add Restaurant"
+  },
+  "home": {
+    "hero": {
+      "title": "Bangkok's Best Pad Kra Pao",
+      "subtitle": "Scored by six culinary dimensions. No compromises.",
+      "cta": "Browse Restaurants"
+    },
+    "featured": "Featured Restaurants",
+    "map": {
+      "addBtn": "Add a Restaurant"
+    }
+  },
+  "restaurants": {
+    "title": "All Restaurants",
+    "search": "Search by name or district…",
+    "minScore": "Min score",
+    "noResults": "No restaurants found.",
+    "reviewCount_one": "{{count}} review",
+    "reviewCount_other": "{{count}} reviews"
+  },
+  "restaurant": {
+    "overallScore": "Overall Score",
+    "dimensions": "Score Breakdown",
+    "reviews": "Reviews",
+    "writeReview": "Write a Review",
+    "noReviews": "No reviews yet. Be the first!",
+    "wokHei": "ผัดมีกลิ่นกระทะดีมาก",
+    "wokHeiEn": "Fantastic aroma of the pan"
+  },
+  "dimensions": {
+    "aromatic": {
+      "label": "Aromatic Authenticity",
+      "casual": "กลิ่นกะเพราถึงใจไหม",
+      "casualEn": "Does the holy basil hit the soul?"
+    },
+    "wok": {
+      "label": "Wok Execution",
+      "casual": "ผัดแห้ง คั่วหอมไหม",
+      "casualEn": "Stir-fried dry, fragrant enough?"
+    },
+    "heat": {
+      "label": "Heat Architecture",
+      "casual": "พริกกระเทียมถึงเครื่องไหม",
+      "casualEn": "Do the chilli-garlic hit the mark?"
+    },
+    "purity": {
+      "label": "Recipe Purity",
+      "casual": "กะเพราแท้ ไม่ใส่ถั่วฝักยาว",
+      "casualEn": "Holy basil only — no long beans"
+    },
+    "protein": {
+      "label": "Protein Texture",
+      "casual": "เนื้อสับมือ ไม่ใช่หมูบดเครื่อง",
+      "casualEn": "Hand-chopped not machine-ground — retains sauce without being wet, no gristle"
+    },
+    "egg": {
+      "label": "Kai Dao Execution",
+      "casual": "ไข่ดาวกรอบนอกไข่แดงเป็นลาวา",
+      "casualEn": "Crispy whites, lava yolk"
+    }
+  },
+  "review": {
+    "title": "Write a Review",
+    "authorName": "Your name",
+    "comment": "Your thoughts",
+    "visitedAt": "Date visited",
+    "submit": "Submit Review",
+    "submitting": "Submitting…",
+    "success": "Review submitted!",
+    "overall": "Overall",
+    "notRated": "—",
+    "heat": {
+      "specifiedQuestion": "Did you specify a spice level?",
+      "yes": "Yes",
+      "no": "No",
+      "howDidItLand": "How did it land?",
+      "1": "Much milder than expected",
+      "2": "Slightly mild",
+      "3": "Spot on",
+      "4": "Slightly hotter than expected",
+      "5": "Way hotter than expected"
+    },
+    "purity": {
+      "question": "Recipe purity?",
+      "pure": "Pure",
+      "hasFillers": "Has fillers",
+      "offenders": "What fillers did you find?",
+      "longBeans": "Long beans",
+      "onions": "Onions",
+      "carrots": "Carrots",
+      "bellPeppers": "Bell peppers",
+      "bambooShoots": "Bamboo shoots"
+    }
+  },
+  "addRestaurant": {
+    "title": "Add a Restaurant",
+    "searchPlaceholder": "Search for a restaurant…",
+    "preview": "Restaurant Preview",
+    "confirm": "Add to Map",
+    "cancel": "Cancel",
+    "noApiKey": "Google Places API key not configured.",
+    "coordinates": "Coordinates"
+  },
+  "lang": {
+    "en": "EN",
+    "th": "TH"
+  }
+}
