@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "github_assume_role" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:ref:refs/heads/main"]
+      values   = ["repo:${var.github_repo}:*"]
     }
   }
 }
@@ -56,8 +56,8 @@ data "aws_iam_policy_document" "github_actions" {
       "s3:ListBucket", "s3:GetBucketVersioning",
     ]
     resources = [
-      "arn:aws:s3:::krapao-terraform-state",
-      "arn:aws:s3:::krapao-terraform-state/*",
+      "arn:aws:s3:::lmacguire-terraform",
+      "arn:aws:s3:::lmacguire-terraform/*",
     ]
   }
 

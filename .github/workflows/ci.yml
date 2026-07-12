@@ -58,8 +58,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: dev
-    env:
-      TF_VAR_acm_certificate_arns: ${{ secrets.TF_VAR_ACM_CERTIFICATE_ARNS }}
     steps:
       - uses: actions/checkout@v4
 
@@ -79,7 +77,7 @@ jobs:
 
       - name: Terraform init
         working-directory: infra
-        run: terraform init -backend-config=backend.hcl
+        run: terraform init
 
       - name: Select workspace
         working-directory: infra
@@ -123,8 +121,6 @@ jobs:
     needs: deploy-dev
     runs-on: ubuntu-latest
     environment: prod
-    env:
-      TF_VAR_acm_certificate_arns: ${{ secrets.TF_VAR_ACM_CERTIFICATE_ARNS }}
     steps:
       - uses: actions/checkout@v4
 
@@ -144,7 +140,7 @@ jobs:
 
       - name: Terraform init
         working-directory: infra
-        run: terraform init -backend-config=backend.hcl
+        run: terraform init
 
       - name: Select workspace
         working-directory: infra
