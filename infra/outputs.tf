@@ -22,8 +22,3 @@ output "site_url" {
   description = "Primary URL for this environment"
   value       = local.use_custom_domain ? "https://${local.domain_name}" : "https://${aws_cloudfront_distribution.site.domain_name}"
 }
-
-output "github_actions_role_arn" {
-  description = "IAM role ARN for GitHub Actions — set this as the AWS_ROLE_ARN Actions variable"
-  value       = aws_iam_role.github_actions.arn
-}
