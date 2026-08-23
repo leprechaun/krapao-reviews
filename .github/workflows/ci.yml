@@ -2,7 +2,6 @@ name: CI/CD
 
 on:
   push:
-    branches: [master]
 
 permissions:
   id-token: write
@@ -47,6 +46,7 @@ jobs:
           VITE_GOOGLE_PLACES_API_KEY: ${{ secrets.VITE_GOOGLE_PLACES_API_KEY }}
 
       - uses: actions/upload-artifact@v7
+        if: github.ref == 'refs/heads/master'
         with:
           name: dist
           path: dist/
@@ -56,6 +56,7 @@ jobs:
   deploy-dev:
     name: Deploy (dev)
     needs: build
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: dev
     steps:
