@@ -9,6 +9,8 @@ locals {
 
   tags = {
     Project     = var.project_name
+    Component   = "frontend"
+    Repository  = "git@github.com:leprechaun/krapao-reviews.git"
     Environment = local.env
     ManagedBy   = "terraform"
   }
