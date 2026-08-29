@@ -4,10 +4,10 @@ github_repo  = "leprechaun/krapao-reviews"
 
 domain_names = {
   dev  = "dev.krapao.fscker.org"
-  prod = "prod.krapao.com"
+  prod = "krapao.fscker.org"
 }
 
 hosted_zone_names = {
   dev  = "fscker.org"
-  prod = "krapao.com"
+  prod  = "fscker.org"
 }
