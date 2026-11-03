@@ -59,6 +59,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: dev
+    env:
+      TF_WORKSPACE: dev
     steps:
       - uses: actions/checkout@v7
 
@@ -79,10 +81,6 @@ jobs:
       - name: Terraform init
         working-directory: infra
         run: terraform init
-
-      - name: Select workspace
-        working-directory: infra
-        run: terraform workspace select dev || terraform workspace new dev
 
       - name: Terraform apply
         working-directory: infra
@@ -105,6 +103,8 @@ jobs:
     needs: deploy-dev
     runs-on: ubuntu-latest
     environment: prod
+    env:
+      TF_WORKSPACE: prod
     steps:
       - uses: actions/checkout@v7
 
@@ -125,10 +125,6 @@ jobs:
       - name: Terraform init
         working-directory: infra
         run: terraform init
-
-      - name: Select workspace
-        working-directory: infra
-        run: terraform workspace select prod || terraform workspace new prod
 
       - name: Terraform apply
         working-directory: infra
