@@ -26,7 +26,7 @@
     "@base-ui-components/react": "^1.0.0-rc.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "i18next": "^26.3.6",
+    "i18next": "^27.0.0",
     "i18next-http-backend": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.24.0",
